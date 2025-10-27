@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alzheimer's Aid - Memory Assistant</title>
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #e0e0e0;
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 1px solid #2a2a2a;
             max-width: 900px;
             width: 100%;
             overflow: hidden;
@@ -39,20 +40,24 @@
         }
 
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #000000;
+            border-bottom: 1px solid #2a2a2a;
+            color: #ffffff;
             padding: 40px;
             text-align: center;
         }
 
         .login-header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 2em;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .login-header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1em;
+            color: #999;
+            font-weight: 400;
         }
 
         .login-form {
@@ -60,100 +65,135 @@
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
+            color: #b0b0b0;
+            font-weight: 500;
+            font-size: 14px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border 0.3s;
+            padding: 14px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #e0e0e0;
+            transition: all 0.2s;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #555;
+            background: #0f0f0f;
+        }
+
+        .form-group input::placeholder {
+            color: #666;
         }
 
         .btn {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-1px);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin-bottom: 10px;
+            background: #2a2a2a;
+            color: #ffffff;
+            margin-bottom: 12px;
+            border: 1px solid #3a3a3a;
+        }
+
+        .btn-primary:hover {
+            background: #333;
         }
 
         .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
+            background: transparent;
+            color: #b0b0b0;
+            border: 1px solid #2a2a2a;
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+            border-color: #3a3a3a;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
+            border-bottom: 1px solid #2a2a2a;
             color: white;
-            padding: 30px;
+            padding: 24px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .header h1 {
-            font-size: 1.8em;
+            font-size: 1.5em;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .logout-btn {
             padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            border-radius: 8px;
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #b0b0b0;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #1a1a1a;
+            border-color: #3a3a3a;
+            color: #fff;
         }
 
         .tabs {
             display: flex;
-            background: #f5f5f5;
-            border-bottom: 2px solid #e0e0e0;
+            background: #0a0a0a;
+            border-bottom: 1px solid #2a2a2a;
         }
 
         .tab {
             flex: 1;
-            padding: 20px;
+            padding: 18px;
             text-align: center;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 500;
             color: #666;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab:hover {
+            color: #999;
+            background: #0f0f0f;
         }
 
         .tab.active {
-            background: white;
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
+            color: #ffffff;
+            border-bottom-color: #fff;
+            background: #1a1a1a;
         }
 
         .content {
@@ -168,121 +208,159 @@
             display: block;
         }
 
+        .section h2 {
+            font-size: 1.3em;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
         .add-form {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
+            background: #0a0a0a;
+            padding: 24px;
+            border-radius: 8px;
             margin-bottom: 30px;
+            border: 1px solid #2a2a2a;
         }
 
         .add-form input, .add-form textarea, .add-form select {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            margin-bottom: 12px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
             font-size: 14px;
+            color: #e0e0e0;
+            transition: all 0.2s;
+        }
+
+        .add-form input:focus, .add-form textarea:focus, .add-form select:focus {
+            outline: none;
+            border-color: #3a3a3a;
+            background: #1f1f1f;
+        }
+
+        .add-form input::placeholder, .add-form textarea::placeholder {
+            color: #666;
         }
 
         .add-form textarea {
             min-height: 100px;
             resize: vertical;
+            font-family: inherit;
+        }
+
+        .add-form select {
+            cursor: pointer;
         }
 
         .item-list {
             display: grid;
-            gap: 15px;
+            gap: 12px;
         }
 
         .item {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
             padding: 20px;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         .item:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102,126,234,0.1);
+            border-color: #3a3a3a;
+            background: #0f0f0f;
         }
 
         .item-header {
             display: flex;
             justify-content: space-between;
             align-items: start;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .item-title {
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #333;
+            font-weight: 500;
+            font-size: 1.05em;
+            color: #fff;
+            line-height: 1.4;
         }
 
         .priority-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 12px;
         }
 
         .priority-high {
-            background: #ff4757;
-            color: white;
+            background: #2a1a1a;
+            color: #ff6b6b;
+            border: 1px solid #3a2020;
         }
 
         .priority-medium {
-            background: #ffa502;
-            color: white;
+            background: #2a2410;
+            color: #ffa94d;
+            border: 1px solid #3a3020;
         }
 
         .priority-low {
-            background: #2ed573;
-            color: white;
+            background: #1a2a1a;
+            color: #51cf66;
+            border: 1px solid #203a20;
         }
 
         .item-content {
-            color: #666;
-            margin-bottom: 10px;
+            color: #999;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
 
         .item-time {
-            color: #999;
-            font-size: 0.9em;
+            color: #666;
+            font-size: 0.85em;
+            font-weight: 500;
         }
 
         .delete-btn {
-            padding: 8px 15px;
-            background: #ff4757;
-            color: white;
-            border: none;
+            padding: 8px 14px;
+            background: transparent;
+            color: #ff6b6b;
+            border: 1px solid #2a2a2a;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
+            font-size: 0.85em;
+            margin-top: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         .delete-btn:hover {
-            background: #ff3838;
+            background: #2a1a1a;
+            border-color: #3a2020;
         }
 
         .alert {
-            padding: 15px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 6px;
             margin-bottom: 20px;
+            border: 1px solid;
         }
 
         .alert-error {
-            background: #ffe0e0;
-            color: #d32f2f;
-            border: 1px solid #ffcdd2;
+            background: #2a1a1a;
+            color: #ff6b6b;
+            border-color: #3a2020;
         }
 
         .alert-success {
-            background: #e0f7e9;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
+            background: #1a2a1a;
+            color: #51cf66;
+            border-color: #203a20;
         }
     </style>
 </head>
@@ -291,7 +369,7 @@
         <!-- Login Page -->
         <div class="login-page active" id="loginPage">
             <div class="login-header">
-                <h1>🧠 Alzheimer's Aid</h1>
+                <h1>Alzheimer's Aid</h1>
                 <p>Your Personal Memory Assistant</p>
             </div>
             <div class="login-form">
@@ -312,19 +390,19 @@
         <!-- Main Application -->
         <div class="main-app" id="mainApp">
             <div class="header">
-                <h1>🧠 Memory Assistant</h1>
+                <h1>Memory Assistant</h1>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
             
             <div class="tabs">
-                <div class="tab active" onclick="switchTab('reminders')">📅 Reminders</div>
-                <div class="tab" onclick="switchTab('notes')">📝 Notes & Journals</div>
+                <div class="tab active" onclick="switchTab('reminders')">Reminders</div>
+                <div class="tab" onclick="switchTab('notes')">Notes & Journals</div>
             </div>
 
             <div class="content">
                 <!-- Reminders Section -->
                 <div class="section active" id="remindersSection">
-                    <h2 style="margin-bottom: 20px;">Your Reminders</h2>
+                    <h2>Your Reminders</h2>
                     <div class="add-form">
                         <input type="text" id="reminderText" placeholder="What do you want to remember?">
                         <input type="datetime-local" id="reminderTime">
@@ -340,7 +418,7 @@
 
                 <!-- Notes Section -->
                 <div class="section" id="notesSection">
-                    <h2 style="margin-bottom: 20px;">Your Notes & Journals</h2>
+                    <h2>Your Notes & Journals</h2>
                     <div class="add-form">
                         <input type="text" id="noteTitle" placeholder="Title">
                         <textarea id="noteContent" placeholder="Write your thoughts, memories, or journal entry here..."></textarea>
@@ -357,7 +435,6 @@
         let reminders = [];
         let notes = [];
 
-        // Simulated backend (replace with actual API calls to C backend)
         const users = [
             { id: 1, username: 'demo', password: 'demo123' }
         ];
@@ -372,7 +449,6 @@
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
 
-            // Simulated authentication (replace with actual API call)
             const user = users.find(u => u.username === username && u.password === password);
             
             if (user) {
@@ -381,7 +457,7 @@
                 document.getElementById('mainApp').classList.add('active');
                 loadData();
             } else {
-                showAlert('Invalid credentials!', 'error', 'loginAlert');
+                showAlert('Invalid credentials. Please try again.', 'error', 'loginAlert');
             }
         }
 
@@ -395,12 +471,12 @@
             }
 
             if (users.find(u => u.username === username)) {
-                showAlert('Username already exists!', 'error', 'loginAlert');
+                showAlert('Username already exists', 'error', 'loginAlert');
                 return;
             }
 
             users.push({ id: users.length + 1, username, password });
-            showAlert('Account created! Please login.', 'success', 'loginAlert');
+            showAlert('Account created successfully. Please login.', 'success', 'loginAlert');
         }
 
         function logout() {
@@ -494,7 +570,7 @@
                             <div class="item-title">${r.text}</div>
                             <span class="priority-badge priority-${priorityClass}">${priorityText}</span>
                         </div>
-                        <div class="item-time">⏰ ${date.toLocaleString()}</div>
+                        <div class="item-time">${date.toLocaleString()}</div>
                         <button class="delete-btn" onclick="deleteReminder(${r.id})">Delete</button>
                     </div>
                 `;
@@ -512,7 +588,7 @@
                             <div class="item-title">${n.title}</div>
                         </div>
                         <div class="item-content">${n.content}</div>
-                        <div class="item-time">📅 ${date.toLocaleString()}</div>
+                        <div class="item-time">${date.toLocaleString()}</div>
                         <button class="delete-btn" onclick="deleteNote(${n.id})">Delete</button>
                     </div>
                 `;
@@ -524,7 +600,6 @@
             renderNotes();
         }
 
-        // Set minimum datetime to now
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         document.getElementById('reminderTime').min = now.toISOString().slice(0, 16);
