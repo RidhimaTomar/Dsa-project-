@@ -7,11 +7,15 @@ It provides reminders for medicines, daily activities, and emergency contacts, h
 - Daily task
 - Medicine reminders
 - Emergency contact notifications
-- Memory notes with text
+- Memory notes with text (will be stored and can be accessed later by date)
 - Simple, easy-to-use interface
+- Mood Manager (for easy tracking of patient's mood which can be accessed by patient or caregiver)
+- Sound Reminders
+- SHA-256 Hashing for secure login and logout activities
+- Calm UI to improve mood
 
 👉🏻 Programmimg language used :
-- C programming language
-- HTML for GUI
+- C programming language 
+- HTML, CSS and JS for GUI
 - Git & GitHub for version control
 
