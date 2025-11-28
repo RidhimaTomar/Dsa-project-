@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alzheimer's Aid - Memory Assistant</title>
+    <title>Memory Care - Alzheimer's Memory Management</title>
     <style>
         * {
             margin: 0;
@@ -12,597 +12,1014 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #0a0a0a;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: #e0e0e0;
+            font-family: 'Arial', sans-serif;
+            background-color: #FFE9D6;
+            color: #3A3A3A;
         }
 
-        .container {
-            background: #1a1a1a;
-            border-radius: 12px;
-            border: 1px solid #2a2a2a;
-            max-width: 900px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .login-page, .main-app {
+        .page {
             display: none;
         }
 
-        .login-page.active, .main-app.active {
+        .page.active {
             display: block;
         }
 
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
         .login-header {
-            background: #000000;
-            border-bottom: 1px solid #2a2a2a;
-            color: #ffffff;
-            padding: 40px;
             text-align: center;
+            margin-bottom: 3rem;
         }
 
-        .login-header h1 {
-            font-size: 2em;
-            margin-bottom: 8px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
+        .app-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #3A3A3A;
+            margin-bottom: 1rem;
         }
 
-        .login-header p {
-            font-size: 1em;
-            color: #999;
-            font-weight: 400;
+        .app-subtitle {
+            font-size: 2rem;
+            color: #666666;
         }
 
         .login-form {
-            padding: 40px;
+            background: #FFFFFF;
+            border: 4px solid #E4D9F9;
+            border-radius: 2rem;
+            padding: 3rem;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #b0b0b0;
-            font-weight: 500;
-            font-size: 14px;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #3A3A3A;
+            margin-bottom: 0.75rem;
         }
 
-        .form-group input {
+        .input-field {
             width: 100%;
-            padding: 14px;
-            background: #0a0a0a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            font-size: 15px;
-            color: #e0e0e0;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus {
+            padding: 1.5rem;
+            font-size: 2rem;
+            background-color: #FFE9D6;
+            color: #3A3A3A;
+            border: 3px solid #E4D9F9;
+            border-radius: 1rem;
             outline: none;
-            border-color: #555;
-            background: #0f0f0f;
+            transition: border-color 0.3s;
         }
 
-        .form-group input::placeholder {
-            color: #666;
+        .input-field:focus {
+            border-color: #F7A78A;
         }
 
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
+        .textarea {
+            resize: vertical;
+            min-height: 150px;
+            font-family: 'Arial', sans-serif;
         }
 
         .btn-primary {
-            background: #2a2a2a;
-            color: #ffffff;
-            margin-bottom: 12px;
-            border: 1px solid #3a3a3a;
+            width: 100%;
+            padding: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            background-color: #F7A78A;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(247, 167, 138, 0.4);
         }
 
         .btn-primary:hover {
-            background: #333;
+            background-color: #F59574;
+            box-shadow: 0 6px 20px rgba(247, 167, 138, 0.6);
+            transform: scale(1.02);
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: #b0b0b0;
-            border: 1px solid #2a2a2a;
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
         }
 
-        .btn-secondary:hover {
-            background: #1a1a1a;
-            border-color: #3a3a3a;
+        .link-button {
+            font-size: 1.5rem;
+            color: #3A3A3A;
+            background: none;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
         }
 
-        .header {
-            background: #000000;
-            border-bottom: 1px solid #2a2a2a;
-            color: white;
-            padding: 24px 30px;
+        /* Main App */
+        .app-header {
+            background: #FFFFFF;
+            border-bottom: 4px solid #E4D9F9;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .header h1 {
-            font-size: 1.5em;
-            font-weight: 600;
-            letter-spacing: -0.5px;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-large {
+            width: 3rem;
+            height: 3rem;
+            color: #F7A78A;
+            stroke-width: 2;
+        }
+
+        .icon {
+            width: 2rem;
+            height: 2rem;
+            stroke-width: 2;
+        }
+
+        .icon-accent {
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #F7A78A;
+            stroke-width: 2;
+        }
+
+        .user-id {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3A3A3A;
+        }
+
+        .username-display {
+            font-size: 1.5rem;
+            color: #666666;
         }
 
         .logout-btn {
-            padding: 10px 20px;
-            background: transparent;
-            border: 1px solid #2a2a2a;
-            color: #b0b0b0;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: #1a1a1a;
-            border-color: #3a3a3a;
-            color: #fff;
-        }
-
-        .tabs {
             display: flex;
-            background: #0a0a0a;
-            border-bottom: 1px solid #2a2a2a;
+            align-items: center;
+            gap: 0.75rem;
+            width: auto;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
         }
 
-        .tab {
-            flex: 1;
-            padding: 18px;
-            text-align: center;
+        /* Navigation */
+        .app-nav {
+            background: #FFFFFF;
+            border-bottom: 4px solid #E4D9F9;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: #E4D9F9;
+            color: #3A3A3A;
+            border: none;
+            border-radius: 0.75rem;
             cursor: pointer;
-            font-weight: 500;
-            color: #666;
-            transition: all 0.2s;
-            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
         }
 
-        .tab:hover {
-            color: #999;
-            background: #0f0f0f;
+        .nav-btn:hover {
+            background-color: #D9C9F3;
         }
 
-        .tab.active {
-            color: #ffffff;
-            border-bottom-color: #fff;
-            background: #1a1a1a;
+        .nav-btn.active {
+            background-color: #F7A78A;
+            color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(247, 167, 138, 0.4);
         }
 
-        .content {
-            padding: 30px;
+        /* Content */
+        .app-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
-        .section {
+        .content-page {
             display: none;
         }
 
-        .section.active {
+        .content-page.active {
             display: block;
         }
 
-        .section h2 {
-            font-size: 1.3em;
-            margin-bottom: 24px;
-            font-weight: 600;
-            color: #fff;
+        .card {
+            background: #FFFFFF;
+            border: 4px solid #E4D9F9;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
-        .add-form {
-            background: #0a0a0a;
-            padding: 24px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border: 1px solid #2a2a2a;
+        .card-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #3A3A3A;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .add-form input, .add-form textarea, .add-form select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #e0e0e0;
-            transition: all 0.2s;
-        }
-
-        .add-form input:focus, .add-form textarea:focus, .add-form select:focus {
-            outline: none;
-            border-color: #3a3a3a;
-            background: #1f1f1f;
-        }
-
-        .add-form input::placeholder, .add-form textarea::placeholder {
-            color: #666;
-        }
-
-        .add-form textarea {
-            min-height: 100px;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        .add-form select {
-            cursor: pointer;
-        }
-
-        .item-list {
-            display: grid;
-            gap: 12px;
-        }
-
-        .item {
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            border-radius: 8px;
-            padding: 20px;
-            transition: all 0.2s;
-        }
-
-        .item:hover {
-            border-color: #3a3a3a;
-            background: #0f0f0f;
-        }
-
-        .item-header {
+        .card-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
-            margin-bottom: 12px;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .item-title {
-            font-weight: 500;
-            font-size: 1.05em;
-            color: #fff;
-            line-height: 1.4;
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .priority-badge {
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: 500;
-            white-space: nowrap;
-            margin-left: 12px;
+        .input-field-small {
+            padding: 0.75rem 1rem;
+            font-size: 1.5rem;
+            background-color: #FFE9D6;
+            color: #3A3A3A;
+            border: 2px solid #E4D9F9;
+            border-radius: 0.75rem;
+            outline: none;
         }
 
-        .priority-high {
-            background: #2a1a1a;
-            color: #ff6b6b;
-            border: 1px solid #3a2020;
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .priority-medium {
-            background: #2a2410;
-            color: #ffa94d;
-            border: 1px solid #3a3020;
+        .list-item {
+            background-color: #FFE9D6;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
-        .priority-low {
-            background: #1a2a1a;
-            color: #51cf66;
-            border: 1px solid #203a20;
+        .list-item-content {
+            flex: 1;
         }
 
-        .item-content {
-            color: #999;
-            margin-bottom: 12px;
-            line-height: 1.5;
+        .list-item-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3A3A3A;
+            margin-bottom: 0.5rem;
         }
 
-        .item-time {
-            color: #666;
-            font-size: 0.85em;
-            font-weight: 500;
+        .list-item-meta {
+            font-size: 1.5rem;
+            color: #666666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
-        .delete-btn {
-            padding: 8px 14px;
-            background: transparent;
-            color: #ff6b6b;
-            border: 1px solid #2a2a2a;
-            border-radius: 5px;
+        .list-item-phone {
+            font-size: 1.5rem;
+            color: #F7A78A;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-delete {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: #E85D75;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 0.75rem;
             cursor: pointer;
-            font-size: 0.85em;
-            margin-top: 12px;
-            font-weight: 500;
-            transition: all 0.2s;
+            transition: background-color 0.3s;
         }
 
-        .delete-btn:hover {
-            background: #2a1a1a;
-            border-color: #3a2020;
+        .btn-delete:hover {
+            background-color: #D74060;
         }
 
-        .alert {
-            padding: 14px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid;
+        .empty-message {
+            text-align: center;
+            font-size: 2rem;
+            color: #666666;
+            padding: 3rem;
         }
 
-        .alert-error {
-            background: #2a1a1a;
-            color: #ff6b6b;
-            border-color: #3a2020;
-        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-title {
+                font-size: 3rem;
+            }
 
-        .alert-success {
-            background: #1a2a1a;
-            color: #51cf66;
-            border-color: #203a20;
+            .app-subtitle {
+                font-size: 1.5rem;
+            }
+
+            .form-group label,
+            .card-title,
+            .list-item-title {
+                font-size: 1.75rem;
+            }
+
+            .input-field,
+            .btn-primary {
+                font-size: 1.5rem;
+            }
+
+            .user-id {
+                font-size: 1.5rem;
+            }
+
+            .username-display {
+                font-size: 1.25rem;
+            }
+
+            .nav-btn {
+                font-size: 1.25rem;
+                padding: 0.75rem 1.5rem;
+            }
+
+            .list-item-meta,
+            .list-item-phone {
+                font-size: 1.25rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Login Page -->
-        <div class="login-page active" id="loginPage">
+    <!-- Login/Register Page -->
+    <div id="loginPage" class="page active">
+        <div class="login-container">
             <div class="login-header">
-                <h1>Alzheimer's Aid</h1>
-                <p>Your Personal Memory Assistant</p>
-            </div>
-            <div class="login-form">
-                <div id="loginAlert"></div>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="loginUsername" placeholder="Enter your username">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password">
-                </div>
-                <button class="btn btn-primary" onclick="login()">Login</button>
-                <button class="btn btn-secondary" onclick="toggleRegister()">Create New Account</button>
-            </div>
-        </div>
-
-        <!-- Main Application -->
-        <div class="main-app" id="mainApp">
-            <div class="header">
-                <h1>Memory Assistant</h1>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <h1 class="app-title">Memory Care</h1>
+                <p class="app-subtitle">Your Daily Companion</p>
             </div>
             
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('reminders')">Reminders</div>
-                <div class="tab" onclick="switchTab('notes')">Notes & Journals</div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" class="input-field">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" class="input-field">
+                </div>
+                
+                <button id="loginBtn" class="btn-primary">LOGIN</button>
             </div>
-
-            <div class="content">
-                <!-- Reminders Section -->
-                <div class="section active" id="remindersSection">
-                    <h2>Your Reminders</h2>
-                    <div class="add-form">
-                        <input type="text" id="reminderText" placeholder="What do you want to remember?">
-                        <input type="datetime-local" id="reminderTime">
-                        <select id="reminderPriority">
-                            <option value="3">High Priority</option>
-                            <option value="2" selected>Medium Priority</option>
-                            <option value="1">Low Priority</option>
-                        </select>
-                        <button class="btn btn-primary" onclick="addReminder()">Add Reminder</button>
-                    </div>
-                    <div class="item-list" id="remindersList"></div>
-                </div>
-
-                <!-- Notes Section -->
-                <div class="section" id="notesSection">
-                    <h2>Your Notes & Journals</h2>
-                    <div class="add-form">
-                        <input type="text" id="noteTitle" placeholder="Title">
-                        <textarea id="noteContent" placeholder="Write your thoughts, memories, or journal entry here..."></textarea>
-                        <button class="btn btn-primary" onclick="addNote()">Save Note</button>
-                    </div>
-                    <div class="item-list" id="notesList"></div>
-                </div>
+            
+            <div class="login-footer">
+                <button id="toggleAuthBtn" class="link-button">Need to Register?</button>
             </div>
         </div>
     </div>
 
+    <!-- Main App -->
+    <div id="mainApp" class="page">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="user-info">
+                    <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <div>
+                        <h2 class="user-id">User ID: <span id="userIdDisplay"></span></h2>
+                        <p class="username-display" id="usernameDisplay"></p>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="btn-primary logout-btn">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    LOGOUT
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="app-nav">
+            <button class="nav-btn active" data-page="reminders">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                REMINDERS
+            </button>
+            <button class="nav-btn" data-page="journal">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+                JOURNAL
+            </button>
+            <button class="nav-btn" data-page="mood">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+                MOOD TRACKER
+            </button>
+            <button class="nav-btn" data-page="contacts">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                CONTACTS
+            </button>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="app-content">
+            <!-- Reminders Page -->
+            <div id="remindersPage" class="content-page active">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        ADD NEW REMINDER
+                    </h2>
+                    <div class="form-group">
+                        <label>What to remember:</label>
+                        <input type="text" id="reminderText" class="input-field" placeholder="Take medicine">
+                    </div>
+                    <div class="form-group">
+                        <label>Time:</label>
+                        <input type="time" id="reminderTime" class="input-field">
+                    </div>
+                    <button id="addReminderBtn" class="btn-primary">ADD REMINDER</button>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">YOUR REMINDERS</h2>
+                    <div id="remindersList" class="list-container"></div>
+                </div>
+            </div>
+
+            <!-- Journal Page -->
+            <div id="journalPage" class="content-page">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        WRITE TODAY'S JOURNAL
+                    </h2>
+                    <div class="form-group">
+                        <label>How was your day?</label>
+                        <textarea id="journalEntry" class="input-field textarea" rows="6" placeholder="Write about your day..."></textarea>
+                    </div>
+                    <button id="addJournalBtn" class="btn-primary">SAVE JOURNAL</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">PREVIOUS JOURNALS</h2>
+                        <div class="search-box">
+                            <svg class="icon-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <input type="date" id="journalSearchDate" class="input-field-small">
+                        </div>
+                    </div>
+                    <div id="journalsList" class="list-container"></div>
+                </div>
+            </div>
+
+            <!-- Mood Page -->
+            <div id="moodPage" class="content-page">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        RECORD TODAY'S MOOD
+                    </h2>
+                    <div class="form-group">
+                        <label>How are you feeling?</label>
+                        <input type="text" id="moodInput" class="input-field" placeholder="Happy, Sad, Peaceful, Anxious...">
+                    </div>
+                    <button id="addMoodBtn" class="btn-primary">SAVE MOOD</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">MOOD HISTORY</h2>
+                        <div class="search-box">
+                            <svg class="icon-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <input type="date" id="moodSearchDate" class="input-field-small">
+                        </div>
+                    </div>
+                    <div id="moodsList" class="list-container"></div>
+                </div>
+            </div>
+
+            <!-- Contacts Page -->
+            <div id="contactsPage" class="content-page">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        ADD EMERGENCY CONTACT
+                    </h2>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="contactName" class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <label>Relationship:</label>
+                        <input type="text" id="contactRelation" class="input-field" placeholder="Son, Daughter, Doctor...">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number:</label>
+                        <input type="tel" id="contactPhone" class="input-field">
+                    </div>
+                    <button id="addContactBtn" class="btn-primary">ADD CONTACT</button>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">EMERGENCY CONTACTS</h2>
+                    <div id="contactsList" class="list-container"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script>
-        let currentUser = null;
-        let reminders = [];
-        let notes = [];
+        // Application State
+        var currentUser = null;
+        var isLoggedIn = false;
+        var currentAuthMode = 'login';
+        var reminders = [];
+        var journals = [];
+        var moods = [];
+        var contacts = [];
+        var reminderCheckInterval = null;
 
-        const users = [
-            { id: 1, username: 'demo', password: 'demo123' }
-        ];
+        // DOM Elements
+        var loginPage = document.getElementById('loginPage');
+        var mainApp = document.getElementById('mainApp');
+        var loginUsername = document.getElementById('loginUsername');
+        var loginPassword = document.getElementById('loginPassword');
+        var loginBtn = document.getElementById('loginBtn');
+        var toggleAuthBtn = document.getElementById('toggleAuthBtn');
+        var logoutBtn = document.getElementById('logoutBtn');
+        var userIdDisplay = document.getElementById('userIdDisplay');
+        var usernameDisplay = document.getElementById('usernameDisplay');
 
-        function showAlert(message, type, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-            setTimeout(() => container.innerHTML = '', 3000);
+        // Navigation
+        var navBtns = document.querySelectorAll('.nav-btn');
+        var contentPages = document.querySelectorAll('.content-page');
+
+        // Reminders
+        var reminderText = document.getElementById('reminderText');
+        var reminderTime = document.getElementById('reminderTime');
+        var addReminderBtn = document.getElementById('addReminderBtn');
+        var remindersList = document.getElementById('remindersList');
+
+        // Journal
+        var journalEntry = document.getElementById('journalEntry');
+        var addJournalBtn = document.getElementById('addJournalBtn');
+        var journalSearchDate = document.getElementById('journalSearchDate');
+        var journalsList = document.getElementById('journalsList');
+
+        // Mood
+        var moodInput = document.getElementById('moodInput');
+        var addMoodBtn = document.getElementById('addMoodBtn');
+        var moodSearchDate = document.getElementById('moodSearchDate');
+        var moodsList = document.getElementById('moodsList');
+
+        // Contacts
+        var contactName = document.getElementById('contactName');
+        var contactRelation = document.getElementById('contactRelation');
+        var contactPhone = document.getElementById('contactPhone');
+        var addContactBtn = document.getElementById('addContactBtn');
+        var contactsList = document.getElementById('contactsList');
+
+        // Helper Functions
+        function generateUserId() {
+            return 'ALZ' + Date.now().toString().slice(-6);
         }
 
-        function login() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
+        function getCurrentDate() {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = String(today.getMonth() + 1).padStart(2, '0');
+            var day = String(today.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
 
-            const user = users.find(u => u.username === username && u.password === password);
+        function playNotificationSound() {
+            var audioContext = new (window.AudioContext || window.webkitAudioContext)();
             
-            if (user) {
-                currentUser = user;
-                document.getElementById('loginPage').classList.remove('active');
-                document.getElementById('mainApp').classList.add('active');
-                loadData();
-            } else {
-                showAlert('Invalid credentials. Please try again.', 'error', 'loginAlert');
+            function playBeep() {
+                var oscillator = audioContext.createOscillator();
+                var gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+
+            for (var i = 0; i < 5; i++) {
+                setTimeout(playBeep, i * 2000);
             }
         }
 
-        function toggleRegister() {
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
+        // Authentication
+        toggleAuthBtn.addEventListener('click', function() {
+            if (currentAuthMode === 'login') {
+                currentAuthMode = 'register';
+                loginBtn.textContent = 'REGISTER';
+                toggleAuthBtn.textContent = 'Already have an account?';
+            } else {
+                currentAuthMode = 'login';
+                loginBtn.textContent = 'LOGIN';
+                toggleAuthBtn.textContent = 'Need to Register?';
+            }
+        });
+
+        loginBtn.addEventListener('click', function() {
+            var username = loginUsername.value.trim();
+            var password = loginPassword.value.trim();
             
             if (!username || !password) {
-                showAlert('Please enter username and password', 'error', 'loginAlert');
+                alert('Please fill in all fields');
                 return;
             }
-
-            if (users.find(u => u.username === username)) {
-                showAlert('Username already exists', 'error', 'loginAlert');
-                return;
-            }
-
-            users.push({ id: users.length + 1, username, password });
-            showAlert('Account created successfully. Please login.', 'success', 'loginAlert');
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('mainApp').classList.remove('active');
-            document.getElementById('loginPage').classList.add('active');
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             
-            event.target.classList.add('active');
-            document.getElementById(tab + 'Section').classList.add('active');
-        }
+            currentUser = {
+                id: generateUserId(),
+                username: username
+            };
+            
+            isLoggedIn = true;
+            userIdDisplay.textContent = currentUser.id;
+            usernameDisplay.textContent = currentUser.username;
+            
+            loginPage.classList.remove('active');
+            mainApp.classList.add('active');
+            
+            startReminderChecker();
+        });
 
-        function addReminder() {
-            const text = document.getElementById('reminderText').value;
-            const time = document.getElementById('reminderTime').value;
-            const priority = parseInt(document.getElementById('reminderPriority').value);
+        logoutBtn.addEventListener('click', function() {
+            isLoggedIn = false;
+            currentUser = null;
+            loginUsername.value = '';
+            loginPassword.value = '';
+            
+            if (reminderCheckInterval) {
+                clearInterval(reminderCheckInterval);
+            }
+            
+            mainApp.classList.remove('active');
+            loginPage.classList.add('active');
+        });
 
+        // Navigation
+        navBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var pageName = btn.getAttribute('data-page');
+                
+                navBtns.forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+                
+                contentPages.forEach(function(page) {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageName + 'Page').classList.add('active');
+            });
+        });
+
+        // Reminders
+        addReminderBtn.addEventListener('click', function() {
+            var text = reminderText.value.trim();
+            var time = reminderTime.value;
+            
             if (!text || !time) {
                 alert('Please fill in all fields');
                 return;
             }
-
-            const reminder = {
+            
+            var reminder = {
                 id: Date.now(),
-                text,
-                timestamp: new Date(time).getTime(),
-                priority,
-                userId: currentUser.id
+                text: text,
+                time: time,
+                date: getCurrentDate(),
+                notified: false
             };
-
+            
             reminders.push(reminder);
-            reminders.sort((a, b) => {
-                if (b.priority !== a.priority) return b.priority - a.priority;
-                return a.timestamp - b.timestamp;
-            });
-
-            document.getElementById('reminderText').value = '';
-            document.getElementById('reminderTime').value = '';
+            reminderText.value = '';
+            reminderTime.value = '';
+            
             renderReminders();
-        }
+        });
 
-        function addNote() {
-            const title = document.getElementById('noteTitle').value;
-            const content = document.getElementById('noteContent').value;
-
-            if (!title || !content) {
-                alert('Please fill in all fields');
+        function renderReminders() {
+            if (reminders.length === 0) {
+                remindersList.innerHTML = '<div class="empty-message">No reminders yet</div>';
                 return;
             }
-
-            const note = {
-                id: Date.now(),
-                title,
-                content,
-                created: Date.now(),
-                userId: currentUser.id
-            };
-
-            notes.unshift(note);
-            document.getElementById('noteTitle').value = '';
-            document.getElementById('noteContent').value = '';
-            renderNotes();
+            
+            var html = '';
+            for (var i = 0; i < reminders.length; i++) {
+                var reminder = reminders[i];
+                html += '<div class="list-item">';
+                html += '<div class="list-item-content">';
+                html += '<div class="list-item-title">' + reminder.text + '</div>';
+                html += '<div class="list-item-meta">';
+                html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+                html += '<circle cx="12" cy="12" r="10"></circle>';
+                html += '<polyline points="12 6 12 12 16 14"></polyline>';
+                html += '</svg>';
+                html += reminder.time;
+                html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+                html += '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>';
+                html += '<line x1="16" y1="2" x2="16" y2="6"></line>';
+                html += '<line x1="8" y1="2" x2="8" y2="6"></line>';
+                html += '<line x1="3" y1="10" x2="21" y2="10"></line>';
+                html += '</svg>';
+                html += reminder.date;
+                html += '</div></div>';
+                html += '<button class="btn-delete" onclick="deleteReminder(' + reminder.id + ')">DELETE</button>';
+                html += '</div>';
+            }
+            remindersList.innerHTML = html;
         }
 
         function deleteReminder(id) {
-            reminders = reminders.filter(r => r.id !== id);
+            reminders = reminders.filter(function(r) {
+                return r.id !== id;
+            });
             renderReminders();
         }
 
-        function deleteNote(id) {
-            notes = notes.filter(n => n.id !== id);
-            renderNotes();
-        }
+        function startReminderChecker() {
+            reminderCheckInterval = setInterval(function() {
+                var now = new Date();
+                var hours = String(now.getHours()).padStart(2, '0');
+                var minutes = String(now.getMinutes()).padStart(2, '0');
+var currentTime = hours + ':' + minutes;
+for (var i = 0; i < reminders.length; i++) {
+                var reminder = reminders[i];
+                if (reminder.time === currentTime && !reminder.notified) {
+                    playNotificationSound();
+                    alert('REMINDER: ' + reminder.text);
+                    reminder.notified = true;
+                }
+            }
+        }, 30000);
+    }
 
-        function renderReminders() {
-            const list = document.getElementById('remindersList');
-            list.innerHTML = reminders.map(r => {
-                const priorityClass = r.priority === 3 ? 'high' : r.priority === 2 ? 'medium' : 'low';
-                const priorityText = r.priority === 3 ? 'High' : r.priority === 2 ? 'Medium' : 'Low';
-                const date = new Date(r.timestamp);
-                
-                return `
-                    <div class="item">
-                        <div class="item-header">
-                            <div class="item-title">${r.text}</div>
-                            <span class="priority-badge priority-${priorityClass}">${priorityText}</span>
-                        </div>
-                        <div class="item-time">${date.toLocaleString()}</div>
-                        <button class="delete-btn" onclick="deleteReminder(${r.id})">Delete</button>
-                    </div>
-                `;
-            }).join('');
+    // Journal
+    addJournalBtn.addEventListener('click', function() {
+        var entry = journalEntry.value.trim();
+        
+        if (!entry) {
+            alert('Please write something');
+            return;
         }
+        
+        var journal = {
+            id: Date.now(),
+            entry: entry,
+            date: getCurrentDate()
+        };
+        
+        journals.push(journal);
+        journalEntry.value = '';
+        
+        renderJournals();
+    });
 
-        function renderNotes() {
-            const list = document.getElementById('notesList');
-            list.innerHTML = notes.map(n => {
-                const date = new Date(n.created);
-                
-                return `
-                    <div class="item">
-                        <div class="item-header">
-                            <div class="item-title">${n.title}</div>
-                        </div>
-                        <div class="item-content">${n.content}</div>
-                        <div class="item-time">${date.toLocaleString()}</div>
-                        <button class="delete-btn" onclick="deleteNote(${n.id})">Delete</button>
-                    </div>
-                `;
-            }).join('');
+    journalSearchDate.addEventListener('change', renderJournals);
+
+    function renderJournals() {
+        var searchDate = journalSearchDate.value;
+        var filteredJournals = searchDate ? 
+            journals.filter(function(j) { return j.date === searchDate; }) : 
+            journals;
+        
+        if (filteredJournals.length === 0) {
+            journalsList.innerHTML = '<div class="empty-message">No journal entries</div>';
+            return;
         }
-
-        function loadData() {
-            renderReminders();
-            renderNotes();
+        
+        var html = '';
+        for (var i = 0; i < filteredJournals.length; i++) {
+            var journal = filteredJournals[i];
+            html += '<div class="list-item">';
+            html += '<div class="list-item-content">';
+            html += '<div class="list-item-meta">';
+            html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+            html += '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>';
+            html += '<line x1="16" y1="2" x2="16" y2="6"></line>';
+            html += '<line x1="8" y1="2" x2="8" y2="6"></line>';
+            html += '<line x1="3" y1="10" x2="21" y2="10"></line>';
+            html += '</svg>';
+            html += journal.date;
+            html += '</div>';
+            html += '<div class="list-item-title" style="font-weight: normal; margin-top: 0.5rem;">' + journal.entry + '</div>';
+            html += '</div></div>';
         }
+        journalsList.innerHTML = html;
+    }
 
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById('reminderTime').min = now.toISOString().slice(0, 16);
-    </script>
+    // Mood
+    addMoodBtn.addEventListener('click', function() {
+        var mood = moodInput.value.trim();
+        
+        if (!mood) {
+            alert('Please enter your mood');
+            return;
+        }
+        
+        var moodEntry = {
+            id: Date.now(),
+            mood: mood,
+            date: getCurrentDate()
+        };
+        
+        moods.push(moodEntry);
+        moodInput.value = '';
+        
+        renderMoods();
+    });
+
+    moodSearchDate.addEventListener('change', renderMoods);
+
+    function renderMoods() {
+        var searchDate = moodSearchDate.value;
+        var filteredMoods = searchDate ? 
+            moods.filter(function(m) { return m.date === searchDate; }) : 
+            moods;
+        
+        if (filteredMoods.length === 0) {
+            moodsList.innerHTML = '<div class="empty-message">No mood entries</div>';
+            return;
+        }
+        
+        var html = '';
+        for (var i = 0; i < filteredMoods.length; i++) {
+            var mood = filteredMoods[i];
+            html += '<div class="list-item">';
+            html += '<div class="list-item-content">';
+            html += '<div class="list-item-title">' + mood.mood + '</div>';
+            html += '<div class="list-item-meta">';
+            html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+            html += '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>';
+            html += '<line x1="16" y1="2" x2="16" y2="6"></line>';
+            html += '<line x1="8" y1="2" x2="8" y2="6"></line>';
+            html += '<line x1="3" y1="10" x2="21" y2="10"></line>';
+            html += '</svg>';
+            html += mood.date;
+            html += '</div></div></div>';
+        }
+        moodsList.innerHTML = html;
+    }
+
+    // Contacts
+    addContactBtn.addEventListener('click', function() {
+        var name = contactName.value.trim();
+        var relation = contactRelation.value.trim();
+        var phone = contactPhone.value.trim();
+        
+        if (!name || !relation || !phone) {
+            alert('Please fill in all fields');
+            return;
+        }
+        
+        var contact = {
+            id: Date.now(),
+            name: name,
+            relationship: relation,
+            phone: phone
+        };
+        
+        contacts.push(contact);
+        contactName.value = '';
+        contactRelation.value = '';
+        contactPhone.value = '';
+        
+        renderContacts();
+    });
+
+    function renderContacts() {
+        if (contacts.length === 0) {
+            contactsList.innerHTML = '<div class="empty-message">No contacts saved</div>';
+            return;
+        }
+        
+        var html = '';
+        for (var i = 0; i < contacts.length; i++) {
+            var contact = contacts[i];
+            html += '<div class="list-item">';
+            html += '<div class="list-item-content">';
+            html += '<div class="list-item-title">' + contact.name + '</div>';
+            html += '<div class="list-item-meta">' + contact.relationship + '</div>';
+            html += '<div class="list-item-phone">';
+            html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+            html += '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>';
+            html += '</svg>';
+            html += contact.phone;
+            html += '</div></div>';
+            html += '<button class="btn-delete" onclick="deleteContact(' + contact.id + ')">DELETE</button>';
+            html += '</div>';
+        }
+        contactsList.innerHTML = html;
+    }
+
+    function deleteContact(id) {
+        contacts = contacts.filter(function(c) {
+            return c.id !== id;
+        });
+        renderContacts();
+    }
+
+    // Initialize empty lists
+    renderReminders();
+    renderJournals();
+    renderMoods();
+    renderContacts();
+</script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
