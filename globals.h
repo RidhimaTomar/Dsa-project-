@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -104,7 +103,16 @@ extern HashTable* user_data_table;
 extern SyncQueue* sync_queue;
 extern int is_online;
 
-// Function declarations
+// User-defined string functions
+int my_strlen(const char* str);
+char* my_strcpy(char* dest, const char* src);
+char* my_strncpy(char* dest, const char* src, int n);
+char* my_strcat(char* dest, const char* src);
+int my_strcmp(const char* str1, const char* str2);
+char* my_strstr(const char* haystack, const char* needle);
+void my_sprintf_int(char* buffer, const char* format, int value);
+void my_sprintf_str(char* buffer, const char* format, const char* str);
+void my_sprintf(char* buffer, const char* format, ...);
 
 // Max Heap operations - O(log n)
 MaxHeap* create_max_heap();
