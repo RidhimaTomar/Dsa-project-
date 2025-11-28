@@ -620,6 +620,7 @@
         var moods = [];
         var contacts = [];
         var reminderCheckInterval = null;
+        var registeredUsers = [];
 
         // DOM Elements
         var loginPage = document.getElementById('loginPage');
@@ -663,7 +664,7 @@
 
         // Helper Functions
         function generateUserId() {
-            return 'ALZ' + Date.now().toString().slice(-6);
+            return 'ALZ' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
         }
 
         function getCurrentDate() {
@@ -699,6 +700,19 @@
             }
         }
 
+        // Load registered users from localStorage
+        function loadRegisteredUsers() {
+            var storedUsers = localStorage.getItem('registeredUsers');
+            if (storedUsers) {
+                registeredUsers = JSON.parse(storedUsers);
+            }
+        }
+
+        // Save registered users to localStorage
+        function saveRegisteredUsers() {
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        }
+
         // Authentication
         toggleAuthBtn.addEventListener('click', function() {
             if (currentAuthMode === 'login') {
@@ -721,22 +735,77 @@
                 return;
             }
             
-            currentUser = {
-                id: generateUserId(),
-                username: username
-            };
-            
-            isLoggedIn = true;
-            userIdDisplay.textContent = currentUser.id;
-            usernameDisplay.textContent = currentUser.username;
-            
-            loginPage.classList.remove('active');
-            mainApp.classList.add('active');
-            
-            startReminderChecker();
+            if (currentAuthMode === 'register') {
+                // Check if username already exists
+                var userExists = registeredUsers.some(function(user) {
+                    return user.username === username;
+                });
+                
+                if (userExists) {
+                    alert('Username already exists. Please choose a different one.');
+                    return;
+                }
+                
+                // Register new user
+                var newUser = {
+                    id: generateUserId(),
+                    username: username,
+                    password: password // In a real app, this should be hashed
+                };
+                
+                registeredUsers.push(newUser);
+                saveRegisteredUsers();
+                
+                alert('Registration successful! Please login with your new account.');
+                
+                // Switch to login mode
+                currentAuthMode = 'login';
+                loginBtn.textContent = 'LOGIN';
+                toggleAuthBtn.textContent = 'Need to Register?';
+                
+                // Clear form
+                loginUsername.value = '';
+                loginPassword.value = '';
+            } else {
+                // Login existing user
+                var foundUser = registeredUsers.find(function(user) {
+                    return user.username === username && user.password === password;
+                });
+                
+                if (!foundUser) {
+                    // Check if username exists but password is wrong
+                    var usernameExists = registeredUsers.some(function(user) {
+                        return user.username === username;
+                    });
+                    
+                    if (usernameExists) {
+                        alert('Invalid password. Please try again.');
+                    } else {
+                        alert('User not found. You need to register first before you can login.');
+                    }
+                    return;
+                }
+                
+                // Successful login
+                currentUser = foundUser;
+                isLoggedIn = true;
+                userIdDisplay.textContent = currentUser.id;
+                usernameDisplay.textContent = currentUser.username;
+                
+                // Load user data from localStorage
+                loadUserData();
+                
+                loginPage.classList.remove('active');
+                mainApp.classList.add('active');
+                
+                startReminderChecker();
+            }
         });
 
         logoutBtn.addEventListener('click', function() {
+            // Save user data before logging out
+            saveUserData();
+            
             isLoggedIn = false;
             currentUser = null;
             loginUsername.value = '';
@@ -749,6 +818,65 @@
             mainApp.classList.remove('active');
             loginPage.classList.add('active');
         });
+
+        // Load user data from localStorage
+        function loadUserData() {
+            if (!currentUser) return;
+            
+            var remindersKey = 'reminders_' + currentUser.id;
+            var journalsKey = 'journals_' + currentUser.id;
+            var moodsKey = 'moods_' + currentUser.id;
+            var contactsKey = 'contacts_' + currentUser.id;
+            
+            var storedReminders = localStorage.getItem(remindersKey);
+            if (storedReminders) {
+                reminders = JSON.parse(storedReminders);
+            } else {
+                reminders = [];
+            }
+            
+            var storedJournals = localStorage.getItem(journalsKey);
+            if (storedJournals) {
+                journals = JSON.parse(storedJournals);
+            } else {
+                journals = [];
+            }
+            
+            var storedMoods = localStorage.getItem(moodsKey);
+            if (storedMoods) {
+                moods = JSON.parse(storedMoods);
+            } else {
+                moods = [];
+            }
+            
+            var storedContacts = localStorage.getItem(contactsKey);
+            if (storedContacts) {
+                contacts = JSON.parse(storedContacts);
+            } else {
+                contacts = [];
+            }
+            
+            // Render the loaded data
+            renderReminders();
+            renderJournals();
+            renderMoods();
+            renderContacts();
+        }
+
+        // Save user data to localStorage
+        function saveUserData() {
+            if (!currentUser) return;
+            
+            var remindersKey = 'reminders_' + currentUser.id;
+            var journalsKey = 'journals_' + currentUser.id;
+            var moodsKey = 'moods_' + currentUser.id;
+            var contactsKey = 'contacts_' + currentUser.id;
+            
+            localStorage.setItem(remindersKey, JSON.stringify(reminders));
+            localStorage.setItem(journalsKey, JSON.stringify(journals));
+            localStorage.setItem(moodsKey, JSON.stringify(moods));
+            localStorage.setItem(contactsKey, JSON.stringify(contacts));
+        }
 
         // Navigation
         navBtns.forEach(function(btn) {
@@ -789,6 +917,7 @@
             reminderText.value = '';
             reminderTime.value = '';
             
+            saveUserData();
             renderReminders();
         });
 
@@ -828,6 +957,7 @@
             reminders = reminders.filter(function(r) {
                 return r.id !== id;
             });
+            saveUserData();
             renderReminders();
         }
 
@@ -836,190 +966,200 @@
                 var now = new Date();
                 var hours = String(now.getHours()).padStart(2, '0');
                 var minutes = String(now.getMinutes()).padStart(2, '0');
-var currentTime = hours + ':' + minutes;
-for (var i = 0; i < reminders.length; i++) {
-                var reminder = reminders[i];
-                if (reminder.time === currentTime && !reminder.notified) {
-                    playNotificationSound();
-                    alert('REMINDER: ' + reminder.text);
-                    reminder.notified = true;
+                var currentTime = hours + ':' + minutes;
+                var currentDate = getCurrentDate();
+                
+                for (var i = 0; i < reminders.length; i++) {
+                    var reminder = reminders[i];
+                    if (reminder.time === currentTime && reminder.date === currentDate && !reminder.notified) {
+                        playNotificationSound();
+                        alert('REMINDER: ' + reminder.text);
+                        reminder.notified = true;
+                        saveUserData();
+                    }
                 }
+            }, 30000); // Check every 30 seconds
+        }
+
+        // Journal
+        addJournalBtn.addEventListener('click', function() {
+            var entry = journalEntry.value.trim();
+            
+            if (!entry) {
+                alert('Please write something');
+                return;
             }
-        }, 30000);
-    }
-
-    // Journal
-    addJournalBtn.addEventListener('click', function() {
-        var entry = journalEntry.value.trim();
-        
-        if (!entry) {
-            alert('Please write something');
-            return;
-        }
-        
-        var journal = {
-            id: Date.now(),
-            entry: entry,
-            date: getCurrentDate()
-        };
-        
-        journals.push(journal);
-        journalEntry.value = '';
-        
-        renderJournals();
-    });
-
-    journalSearchDate.addEventListener('change', renderJournals);
-
-    function renderJournals() {
-        var searchDate = journalSearchDate.value;
-        var filteredJournals = searchDate ? 
-            journals.filter(function(j) { return j.date === searchDate; }) : 
-            journals;
-        
-        if (filteredJournals.length === 0) {
-            journalsList.innerHTML = '<div class="empty-message">No journal entries</div>';
-            return;
-        }
-        
-        var html = '';
-        for (var i = 0; i < filteredJournals.length; i++) {
-            var journal = filteredJournals[i];
-            html += '<div class="list-item">';
-            html += '<div class="list-item-content">';
-            html += '<div class="list-item-meta">';
-            html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
-            html += '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>';
-            html += '<line x1="16" y1="2" x2="16" y2="6"></line>';
-            html += '<line x1="8" y1="2" x2="8" y2="6"></line>';
-            html += '<line x1="3" y1="10" x2="21" y2="10"></line>';
-            html += '</svg>';
-            html += journal.date;
-            html += '</div>';
-            html += '<div class="list-item-title" style="font-weight: normal; margin-top: 0.5rem;">' + journal.entry + '</div>';
-            html += '</div></div>';
-        }
-        journalsList.innerHTML = html;
-    }
-
-    // Mood
-    addMoodBtn.addEventListener('click', function() {
-        var mood = moodInput.value.trim();
-        
-        if (!mood) {
-            alert('Please enter your mood');
-            return;
-        }
-        
-        var moodEntry = {
-            id: Date.now(),
-            mood: mood,
-            date: getCurrentDate()
-        };
-        
-        moods.push(moodEntry);
-        moodInput.value = '';
-        
-        renderMoods();
-    });
-
-    moodSearchDate.addEventListener('change', renderMoods);
-
-    function renderMoods() {
-        var searchDate = moodSearchDate.value;
-        var filteredMoods = searchDate ? 
-            moods.filter(function(m) { return m.date === searchDate; }) : 
-            moods;
-        
-        if (filteredMoods.length === 0) {
-            moodsList.innerHTML = '<div class="empty-message">No mood entries</div>';
-            return;
-        }
-        
-        var html = '';
-        for (var i = 0; i < filteredMoods.length; i++) {
-            var mood = filteredMoods[i];
-            html += '<div class="list-item">';
-            html += '<div class="list-item-content">';
-            html += '<div class="list-item-title">' + mood.mood + '</div>';
-            html += '<div class="list-item-meta">';
-            html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
-            html += '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>';
-            html += '<line x1="16" y1="2" x2="16" y2="6"></line>';
-            html += '<line x1="8" y1="2" x2="8" y2="6"></line>';
-            html += '<line x1="3" y1="10" x2="21" y2="10"></line>';
-            html += '</svg>';
-            html += mood.date;
-            html += '</div></div></div>';
-        }
-        moodsList.innerHTML = html;
-    }
-
-    // Contacts
-    addContactBtn.addEventListener('click', function() {
-        var name = contactName.value.trim();
-        var relation = contactRelation.value.trim();
-        var phone = contactPhone.value.trim();
-        
-        if (!name || !relation || !phone) {
-            alert('Please fill in all fields');
-            return;
-        }
-        
-        var contact = {
-            id: Date.now(),
-            name: name,
-            relationship: relation,
-            phone: phone
-        };
-        
-        contacts.push(contact);
-        contactName.value = '';
-        contactRelation.value = '';
-        contactPhone.value = '';
-        
-        renderContacts();
-    });
-
-    function renderContacts() {
-        if (contacts.length === 0) {
-            contactsList.innerHTML = '<div class="empty-message">No contacts saved</div>';
-            return;
-        }
-        
-        var html = '';
-        for (var i = 0; i < contacts.length; i++) {
-            var contact = contacts[i];
-            html += '<div class="list-item">';
-            html += '<div class="list-item-content">';
-            html += '<div class="list-item-title">' + contact.name + '</div>';
-            html += '<div class="list-item-meta">' + contact.relationship + '</div>';
-            html += '<div class="list-item-phone">';
-            html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
-            html += '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>';
-            html += '</svg>';
-            html += contact.phone;
-            html += '</div></div>';
-            html += '<button class="btn-delete" onclick="deleteContact(' + contact.id + ')">DELETE</button>';
-            html += '</div>';
-        }
-        contactsList.innerHTML = html;
-    }
-
-    function deleteContact(id) {
-        contacts = contacts.filter(function(c) {
-            return c.id !== id;
+            
+            var journal = {
+                id: Date.now(),
+                entry: entry,
+                date: getCurrentDate()
+            };
+            
+            journals.push(journal);
+            journalEntry.value = '';
+            
+            saveUserData();
+            renderJournals();
         });
-        renderContacts();
-    }
 
-    // Initialize empty lists
-    renderReminders();
-    renderJournals();
-    renderMoods();
-    renderContacts();
-</script>
+        journalSearchDate.addEventListener('change', renderJournals);
+
+        function renderJournals() {
+            var searchDate = journalSearchDate.value;
+            var filteredJournals = searchDate ? 
+                journals.filter(function(j) { return j.date === searchDate; }) : 
+                journals;
+            
+            if (filteredJournals.length === 0) {
+                journalsList.innerHTML = '<div class="empty-message">No journal entries</div>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < filteredJournals.length; i++) {
+                var journal = filteredJournals[i];
+                html += '<div class="list-item">';
+                html += '<div class="list-item-content">';
+                html += '<div class="list-item-meta">';
+                html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+                html += '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>';
+                html += '<line x1="16" y1="2" x2="16" y2="6"></line>';
+                html += '<line x1="8" y1="2" x2="8" y2="6"></line>';
+                html += '<line x1="3" y1="10" x2="21" y2="10"></line>';
+                html += '</svg>';
+                html += journal.date;
+                html += '</div>';
+                html += '<div class="list-item-title" style="font-weight: normal; margin-top: 0.5rem;">' + journal.entry + '</div>';
+                html += '</div></div>';
+            }
+            journalsList.innerHTML = html;
+        }
+
+        // Mood
+        addMoodBtn.addEventListener('click', function() {
+            var mood = moodInput.value.trim();
+            
+            if (!mood) {
+                alert('Please enter your mood');
+                return;
+            }
+            
+            var moodEntry = {
+                id: Date.now(),
+                mood: mood,
+                date: getCurrentDate()
+            };
+            
+            moods.push(moodEntry);
+            moodInput.value = '';
+            
+            saveUserData();
+            renderMoods();
+        });
+
+        moodSearchDate.addEventListener('change', renderMoods);
+
+        function renderMoods() {
+            var searchDate = moodSearchDate.value;
+            var filteredMoods = searchDate ? 
+                moods.filter(function(m) { return m.date === searchDate; }) : 
+                moods;
+            
+            if (filteredMoods.length === 0) {
+                moodsList.innerHTML = '<div class="empty-message">No mood entries</div>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < filteredMoods.length; i++) {
+                var mood = filteredMoods[i];
+                html += '<div class="list-item">';
+                html += '<div class="list-item-content">';
+                html += '<div class="list-item-title">' + mood.mood + '</div>';
+                html += '<div class="list-item-meta">';
+                html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+                html += '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>';
+                html += '<line x1="16" y1="2" x2="16" y2="6"></line>';
+                html += '<line x1="8" y1="2" x2="8" y2="6"></line>';
+                html += '<line x1="3" y1="10" x2="21" y2="10"></line>';
+                html += '</svg>';
+                html += mood.date;
+                html += '</div></div></div>';
+            }
+            moodsList.innerHTML = html;
+        }
+
+        // Contacts
+        addContactBtn.addEventListener('click', function() {
+            var name = contactName.value.trim();
+            var relation = contactRelation.value.trim();
+            var phone = contactPhone.value.trim();
+            
+            if (!name || !relation || !phone) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            var contact = {
+                id: Date.now(),
+                name: name,
+                relationship: relation,
+                phone: phone
+            };
+            
+            contacts.push(contact);
+            contactName.value = '';
+            contactRelation.value = '';
+            contactPhone.value = '';
+            
+            saveUserData();
+            renderContacts();
+        });
+
+        function renderContacts() {
+            if (contacts.length === 0) {
+                contactsList.innerHTML = '<div class="empty-message">No contacts saved</div>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < contacts.length; i++) {
+                var contact = contacts[i];
+                html += '<div class="list-item">';
+                html += '<div class="list-item-content">';
+                html += '<div class="list-item-title">' + contact.name + '</div>';
+                html += '<div class="list-item-meta">' + contact.relationship + '</div>';
+                html += '<div class="list-item-phone">';
+                html += '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">';
+                html += '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>';
+                html += '</svg>';
+                html += contact.phone;
+                html += '</div></div>';
+                html += '<button class="btn-delete" onclick="deleteContact(' + contact.id + ')">DELETE</button>';
+                html += '</div>';
+            }
+            contactsList.innerHTML = html;
+        }
+
+        function deleteContact(id) {
+            contacts = contacts.filter(function(c) {
+                return c.id !== id;
+            });
+            saveUserData();
+            renderContacts();
+        }
+
+        // Initialize
+        window.onload = function() {
+            loadRegisteredUsers();
+            
+            // Initialize empty lists
+            renderReminders();
+            renderJournals();
+            renderMoods();
+            renderContacts();
+        };
+    </script>
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="en">
